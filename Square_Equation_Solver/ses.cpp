@@ -1,4 +1,3 @@
-#include <stdio.h>
 #include <assert.h>
 #include <math.h>
 #include <iostream>
@@ -13,7 +12,7 @@ int Solver (double a, double b, double c, double *x1, double *x2)
 	assert (x2 != NULL);
 	assert (x1 != x2);
 	
-	int d = 0;
+	double d = 0;
 
 	if (a == 0)
 	{
@@ -98,40 +97,32 @@ int Solver (double a, double b, double c, double *x1, double *x2)
 
 int main ()
 {
-	int res;
-	bool ok = false;
 	double a = 0, b = 0, c = 0;
-	while (true)
-	{
-		printf ("Input a, b, c \n");
-		std::cin >> a >> b >> c;
-		if (!std::cin)
-		{
-			std::cout << "Shlyapa hoooooy" << std::endl;
-			std::cin.clear ();
-			while (std::cin.get () != '\n');
-		}
-		else break;
-	}
 	double x1 = 0, x2 = 0;
 
+	while(!(std::cin >> a >> b >> c))
+	{
+		std::cout << "Try again!" << std::endl;
+		std::cin.clear ();
+		while (std::cin.get () != '\n');
+	}
 	int Q_roots = Solver (a, b, c, &x1, &x2);
 
 	switch (Q_roots)
 	{
-		case 0: printf ("0 roots\n");
+		case 0: std::cout << "0 roots" << std::endl;
 		break;
 
-		case 1: printf ("x = %lg\n", x1);
+		case 1: std::cout << "x = " << x1 << std::endl;
 		break;
 		
-		case 2: printf ("x1 = %lg, x2 = %lg\n", x1, x2);
+		case 2: std::cout << "x1 = " << x1 << ", x2 = " << x2 << std::endl;
 		break;
 
-		case -1: printf ("Any number\n");
+		case -1: std::cout << "Any number" << std::endl;
 		break;
 
-		default: printf ("In function main () ERROR: Q_roots = %d\n", Q_roots);
+		default: std::cout << "In function main () ERROR: Q_roots = " << Q_roots << std::endl;
 		return 1;
 	}
 	return 0;
