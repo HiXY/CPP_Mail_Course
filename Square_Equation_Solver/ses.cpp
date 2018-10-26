@@ -1,6 +1,7 @@
 #include <assert.h>
 #include <math.h>
 #include <iostream>
+#include <sstream>
 
 int Solver (double a, double b, double c, double *x1, double *x2)
 {
@@ -99,12 +100,14 @@ int main ()
 {
 	double a = 0, b = 0, c = 0;
 	double x1 = 0, x2 = 0;
-
-	while(!(std::cin >> a >> b >> c))
+	
+	std::string line;
+	while (std::getline (std::cin, line))
 	{
+		std::istringstream iss (line);
+		if(iss >> a >> b >> c)
+			break;
 		std::cout << "Try again!" << std::endl;
-		std::cin.clear ();
-		while (std::cin.get () != '\n');
 	}
 	int Q_roots = Solver (a, b, c, &x1, &x2);
 
