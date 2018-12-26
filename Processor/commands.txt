@@ -1,0 +1,15 @@
+input
+push 1
+popr ax
+popr bx
+pushr ax
+fact:
+pushr bx
+mul
+pushr bx
+cmp 1
+dec bx
+je end:
+call fact:
+end:
+ret
