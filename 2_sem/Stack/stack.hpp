@@ -18,6 +18,7 @@ class Stack
 		const T &top () const;
 		bool empty ();
 		size_t size ();
+		int capacity ();
 		Stack &operator = (Stack <T> &);
 };
 
@@ -54,18 +55,18 @@ void Stack <T>::push (const T &el)
 		for (int i = 0; i < top_; i++)
 			ptr_[i] = tmp.ptr_[i];
 	}
-	ptr_[top++] = el;
+	ptr_[top_++] = el;
 }
 template <typename T>
 void Stack <T>::pop ()
 {
-	assert (top > 0 && "Stack is EMPTY!!!!\n");
-	top--;
+	assert (top_ > 0 && "Stack is EMPTY!!!!\n");
+	top_--;
 }
 template <typename T>
 const T &Stack <T>::top () const
 {
-	assert (top > 0 && "Stack is EMPTY!!!!\n");
+	assert (top_ > 0 && "Stack is EMPTY!!!!\n");
 	return ptr_[top_ - 1];
 }
 template <typename T>
@@ -77,6 +78,11 @@ template <typename T>
 size_t Stack <T>::size ()
 {
 	return this -> size_;
+}
+template <typename T>
+int Stack <T>::capacity ()
+{
+	return this -> top_;
 }
 template <typename T>
 Stack <T> &Stack <T>::operator = (Stack <T> &stk)
