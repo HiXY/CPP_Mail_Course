@@ -56,13 +56,13 @@ bool testOperEqual ()
 	stk2 = stk1;
 	return stk1.size () == stk2.size () && stk1.capacity () == stk2.capacity () && stk1.top () == stk2.top ();
 }
-const char *testname[] = {"Constructor", "Push", "Pop", "Top", "Empty", "Size", "Operator ="};
+const char *testname [] = {"Constructor", "Push", "Pop", "Top", "Empty", "Size", "Operator ="};
 bool (*tests[])(void) = {testConstr, testPush, testPop, testTop, testEmpty, testSize, testOperEqual};
 int main ()
 {
-	for(std::size_t i = 0; i < sizeof(tests) / sizeof(char *); i++)
+	for (std::size_t i = 0; i < sizeof (tests) / sizeof (char *); i++)
     {
-        if(tests[i]())
+        if (tests[i]())
             std::cout << "Test " << i + 1 << " (" << testname[i] << "): ok" << std::endl;
         else
             std::cout << "Test " << i + 1 << " (" << testname[i] << "): failed" << std::endl;
