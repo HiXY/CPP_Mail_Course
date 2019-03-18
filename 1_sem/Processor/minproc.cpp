@@ -151,20 +151,20 @@ int main ()
 			code[it++] = 31;
 			std::string mark = "";
 			iss >> mark;
-            std::map <std::string, size_t>::iterator m_it = marks.find(mark);
-            if (m_it != marks.end ())
-                code[it++] = m_it -> second;
-            continue;
+			std::map <std::string, size_t>::iterator m_it = marks.find(mark);
+			if (m_it != marks.end ())
+				code[it++] = m_it -> second;
+			continue;
 		}
 		else if (!word.compare ("call"))
 		{
 			code[it++] = 32;
-            std::string mark = "";
-            iss >> mark;
+			std::string mark = "";
+			iss >> mark;
 			std::map <std::string, size_t>::iterator m_it = marks.find(mark);
-            if (m_it != marks.end ())
-                code[it++] = m_it -> second;
-            continue;
+			if (m_it != marks.end ())
+				code[it++] = m_it -> second;
+			continue;
 		}
 		else if (!word.compare ("ret"))
 		{

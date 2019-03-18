@@ -204,9 +204,9 @@ class Proc
 					if (res == 1)
 					{
 						data.pop ();
-                        int mark = code[i + 1];
-                        i = mark - 1;
-                        ////std::cout << i << " i" << std::endl;
+						int mark = code[i + 1];
+						i = mark - 1;
+						////std::cout << i << " i" << std::endl;
 					}
 					else if (res == 0)
 					{
