@@ -30,11 +30,11 @@ class Proc
 	private:
 		int ax = 0, bx = 0;
 		Stack <int> data;
-	
+
 	public:
 		Proc (){};
 		~Proc (){};
-		
+
 		void start (int code[]);
 };
 	void Proc::start (int code[])
@@ -106,7 +106,7 @@ class Proc
 				}
 				case 7:
 				{
-					
+
 					auto cmprtr = code[i + 1];
 					auto el = data.peek ();
 					data.pop ();
@@ -220,8 +220,8 @@ class Proc
 					int mark = code[i + 1];
 						////std::cout << code[mark] << " code[mark]" << std::endl;
 					i = mark - 1;
-						////std::cout << i << " i" << std::endl; 
-					
+						////std::cout << i << " i" << std::endl;
+
 					break;
 				}
 				case 33:

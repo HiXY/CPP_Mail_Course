@@ -14,7 +14,7 @@ int main ()
 	int code[1024] = {0};
 	size_t it = 0, cntr = 0, q_of_marks = 0;
 	std::string str = "";
-	
+
 	std::ifstream comm ("commands.txt");
 	if (!comm)
 	{
@@ -22,7 +22,7 @@ int main ()
 		return 0;
 	}
 	else std::cout << "File opened, OK (^_^)!" << std::endl;
-	
+
 	while (std::getline (comm, str))
 	{
 		std::istringstream iss (str);
@@ -33,20 +33,20 @@ int main ()
 			marks[word] = cntr - q_of_marks;
 			q_of_marks++;
 		}
-		else 
+		else
 			comm_copy.push_back (str);
 		if (!word.compare ("push") || !word.compare ("cmp") || !word.compare ("jne") || !word.compare ("je") || !word.compare ("call"))
 			cntr += 2;
 		else
 			cntr ++;
 	}
-	/*	
+	/*
 	std::ofstream o_comm ("commands_r.txt");
 	for (size_t i = 0; i < comm_copy.size (); i++)
 	{
 		o_comm << comm_copy[i] << std::endl;
 	}
-	
+
 	std::ifstream i_comm ("commands_r.txt");
 	////while (std::getline (i_comm, str))*/
 	for (auto el : comm_copy)
@@ -66,7 +66,7 @@ int main ()
 			code[it++] = 2;
 			continue;
 		}
-		else if (!word.compare ("add"))	
+		else if (!word.compare ("add"))
 		{
 			code[it++] = 3;
 			continue;
@@ -141,7 +141,7 @@ int main ()
 			code[it++] = 30;
 			std::string mark = "";
 			iss >> mark;
-			std::map <std::string, size_t>::iterator m_it = marks.find(mark); 
+			std::map <std::string, size_t>::iterator m_it = marks.find(mark);
 			if (m_it != marks.end ())
 				code[it++] = m_it -> second;
 			continue;
@@ -150,7 +150,7 @@ int main ()
 		{
 			code[it++] = 31;
 			std::string mark = "";
-            iss >> mark;
+			iss >> mark;
             std::map <std::string, size_t>::iterator m_it = marks.find(mark);
             if (m_it != marks.end ())
                 code[it++] = m_it -> second;
@@ -161,7 +161,7 @@ int main ()
 			code[it++] = 32;
             std::string mark = "";
             iss >> mark;
-            std::map <std::string, size_t>::iterator m_it = marks.find(mark);
+			std::map <std::string, size_t>::iterator m_it = marks.find(mark);
             if (m_it != marks.end ())
                 code[it++] = m_it -> second;
             continue;
@@ -171,7 +171,7 @@ int main ()
 			code[it++] = 33;
 			continue;
 		}
-	}		
+	}
 	Proc p;
 	/*for (int j = 0; j <= 18; j++)
 		std::cout << j << "_" << code[j] << " ";
