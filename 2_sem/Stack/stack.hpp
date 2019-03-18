@@ -1,5 +1,6 @@
 #include <cstdlib>
-#include <cassert>
+#include <stdexcept>
+#include <iostream>
 
 template <typename T>
 class Stack
@@ -9,34 +10,46 @@ class Stack
 		size_t size_;
 		int top_;
 	public:
-		Stack (size_t = 16);
-		Stack (const Stack <T> &);
+		explicit Stack (size_t = 16) noexcept;
+		Stack (const Stack <T> &) noexcept;
+		Stack (Stack <T> &&) noexcept;
 		~Stack ();
 
 		void push (const T &);
 		void pop ();
 		const T &top () const;
-		bool empty ();
-		size_t size ();
-		int capacity ();
-		Stack &operator = (Stack <T> &);
+		bool empty () const;
+		size_t size () const;
+		int capacity () const;
+		Stack &operator = (const Stack <T> &) noexcept;
+		Stack &operator = (Stack <T> &&);
 };
 
 template <typename T>
-Stack <T>::Stack (size_t size) : size_ (size)
+Stack <T>::Stack (size_t size) noexcept : size_ (size)
 {
 	ptr_ = new T[size];
 	top_ = 0;
 }
 template <typename T>
-Stack <T>::Stack (const Stack <T> &origin)
+Stack <T>::Stack (const Stack <T> &origin) noexcept
 {
 
 	ptr_ = new T[origin.size_];
 	size_ = origin.size_;
 	top_ = origin.top_;
+
 	for (int i = 0; i < top_; i++)
 		ptr_[i] = origin.ptr_[i];
+	////std::cout << "CNSTRCTR WTH CPY" << std::endl;
+}
+template <typename T>
+Stack <T>::Stack (Stack <T> &&origin) noexcept : ptr_ (std::move (origin.ptr_)), size_(origin.size_), top_(origin.top_)
+{
+	origin.ptr_ = nullptr;
+	origin.size_ = 0;
+	origin.top_ = 0;
+	////std::cout << "CNSTRCTR WTHT CPY" << std::endl;
 }
 template <typename T>
 Stack <T>::~Stack ()
@@ -60,40 +73,62 @@ void Stack <T>::push (const T &el)
 template <typename T>
 void Stack <T>::pop ()
 {
-	assert (top_ > 0 && "Stack is EMPTY!!!!\n");
+	if (top_ <= 0)
+		throw std::out_of_range ("CAN'T POP FROM STACK!!!! IT'S EMPTY!!!!");
 	top_--;
 }
 template <typename T>
 const T &Stack <T>::top () const
 {
-	assert (top_ > 0 && "Stack is EMPTY!!!!\n");
+	if (top_ <= 0)
+		throw std::out_of_range ("NO TOP ELEMENT!!!! STACK IS EMPTY!!!!");
 	return ptr_[top_ - 1];
 }
 template <typename T>
-bool Stack <T>::empty ()
+bool Stack <T>::empty () const
 {
 	return this -> top_ == 0;
 }
 template <typename T>
-size_t Stack <T>::size ()
+size_t Stack <T>::size () const
 {
 	return this -> size_;
 }
 template <typename T>
-int Stack <T>::capacity ()
+int Stack <T>::capacity () const
 {
 	return this -> top_;
 }
 template <typename T>
-Stack <T> &Stack <T>::operator = (Stack <T> &stk)
+Stack <T> &Stack <T>::operator = (const Stack <T> &stk) noexcept
 {
 	if (&stk == this)
 		return *this;
+
 	delete[] ptr_;
 	size_ = stk.size_;
 	ptr_ = new T[size_];
 	top_ = stk.top_;
+
 	for (int i = 0; i < top_; i++)
 		ptr_[i] = stk.ptr_[i];
+	////std::cout << "= WTH CPY" << std::endl;
+	return *this;
+}
+template <typename T>
+Stack <T> &Stack <T>::operator = (Stack <T> &&stk)
+{
+	if (this == &stk)
+		throw std::logic_error ("MOVING YOURSELF!!!!");
+
+	ptr_ = nullptr;
+	ptr_ = std::move (stk.ptr_);
+	size_ = stk.size_;
+	top_ = stk.top_;
+
+	stk.ptr_ = nullptr;
+	stk.size_ = 0;
+	stk.top_ = 0;
+	////std::cout << "= WTHT CPY" << std::endl;
 	return *this;
 }
