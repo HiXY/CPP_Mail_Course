@@ -13,7 +13,7 @@ class Stack
 		explicit Stack (size_t = 16) noexcept;
 		Stack (const Stack <T> &) noexcept;
 		Stack (Stack <T> &&) noexcept;
-		~Stack ();
+		~Stack () noexcept;
 
 		void push (const T &);
 		void pop ();
@@ -52,7 +52,7 @@ Stack <T>::Stack (Stack <T> &&origin) noexcept : ptr_ (std::move (origin.ptr_)),
 	////std::cout << "CNSTRCTR WTHT CPY" << std::endl;
 }
 template <typename T>
-Stack <T>::~Stack ()
+Stack <T>::~Stack () noexcept
 {
 	delete[] ptr_;
 }
@@ -120,12 +120,13 @@ Stack <T> &Stack <T>::operator = (Stack <T> &&stk)
 {
 	if (this == &stk)
 		throw std::logic_error ("MOVING YOURSELF!!!!");
-
+	delete[] ptr_;
 	ptr_ = nullptr;
 	ptr_ = std::move (stk.ptr_);
 	size_ = stk.size_;
 	top_ = stk.top_;
 
+	delete[] stk.ptr_;
 	stk.ptr_ = nullptr;
 	stk.size_ = 0;
 	stk.top_ = 0;
