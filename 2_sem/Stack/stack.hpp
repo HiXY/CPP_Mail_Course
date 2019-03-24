@@ -120,13 +120,11 @@ Stack <T> &Stack <T>::operator = (Stack <T> &&stk)
 {
 	if (this == &stk)
 		throw std::logic_error ("MOVING YOURSELF!!!!");
-	delete[] ptr_;
 	ptr_ = nullptr;
 	ptr_ = std::move (stk.ptr_);
 	size_ = stk.size_;
 	top_ = stk.top_;
 
-	delete[] stk.ptr_;
 	stk.ptr_ = nullptr;
 	stk.size_ = 0;
 	stk.top_ = 0;
