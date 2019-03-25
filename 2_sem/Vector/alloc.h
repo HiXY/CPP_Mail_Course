@@ -18,11 +18,11 @@ class MyAlloc
         MyAlloc (const MyAlloc <U> &) {}
         ~MyAlloc (){}
 
-        template <typename U>                                                  //// rebind allocator to type U
+        template <typename U>                                           //// rebind allocator to type U
         struct rebind
         {typedef MyAlloc <U> other;};
 
-        pointer allocate (size_type num)                                    //// alloc but don't init num el of type T
+        pointer allocate (size_type num)                                //// alloc but don't init num el of type T
         {
             return static_cast <pointer> (calloc (num, sizeof (value_type)));
         }
@@ -35,7 +35,7 @@ class MyAlloc
         {
             return std::numeric_limits <size_type>::max () / sizeof (T);
         }
-                                                                                    //// return that all spec of this alloc are interchangeable
+                                                                        //// return that all spec of this alloc are interchangeable
         template <class T2>
         bool operator == (const MyAlloc<T2> &) const
         {return true;}

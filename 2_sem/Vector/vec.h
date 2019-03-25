@@ -52,6 +52,21 @@ class MyVector
 		*/
 	private:
 		pointer begin_, end_, end_of_storage_;
+
+		pointer allocate (size_type count)
+		{
+			return MyAlloc<T>::allocate (count);
+		}
+
+		void deallocate () noexcept
+		{
+			deallocate (begin_, capacity ());
+		}
+
+		void deallocate (pointer begin, size_type count) noexcept
+		{
+			if (begin != nullptr) MyAlloc<T>::deallocate (begin, count);
+		}
 };
 
 template <typename T>
@@ -85,7 +100,7 @@ begin_ (other.begin_), end_ (other.end_), end_of_storage_ (other.end_of_storage_
 template <typename T>
 MyVector <T>::~MyVector () noexcept
 {
-	dealocate (begin_, capacity ())
+	deallocate ()
 }
 template <typename T>
 typename MyVector <T>::pointer MyVector <T>::begin () noexcept {return begin_;}
@@ -149,7 +164,7 @@ void MyVector <T>::assign (typename MyVector <T>::size_type count, const T &valu
 	if (count > capacity ())
 	{
 		pointer new_storage = allocate (count);
-		deallocate (begin_);
+		deallocate ();
 		begin_ = new_storage;
 		end_of_storage_ = begin_ + count;
 	}
@@ -165,7 +180,7 @@ typename MyVector <T>::pointer MyVector <T>::insert (typename MyVector <T>::cons
 		pointer new_storage = allocate (size () + 1);
 		memcpy (new_storage, begin_, index * sizeof (value_type));
 		memcpy (new_storage + index + 1, _begin + index, (size () - index) * sizeof(value_type));
-		deallocate (begin_);
+		deallocate ();
 		end_ = new_storage + size () + 1;
 		begin_ = new_storage;
 		end_of_storage_ = begin_ + size () + 1;
@@ -188,7 +203,7 @@ typename MyVector <T>::pointer MyVector <T>::insert (typename MyVector <T>::cons
 		pointer new_storage = allocate (size () + 1);
 		memcpy (new_storage, begin_, index * sizeof (value_type));
 		memcpy (new_storage + index + 1, _begin + index, (size () - index) * sizeof(value_type));
-		deallocate (begin_);
+		deallocate ();
 		end_ = new_storage + size () + 1;
 		begin_ = new_storage;
 		end_of_storage_ = begin_ + size () + 1;
@@ -220,32 +235,38 @@ typename MyVector <T>::pointer MyVector <T>::erase (typename MyVector <T>::const
 template <typename T>
 void MyVector <T>::push_back (const T &value)
 {
+	*end_ = insert (end_, value);
+	/*
 	if (end_ == end_of_storage_)
 	{
 		pointer new_storage = allocate (size () + 1);
 		memcpy (new_storage, begin_, size () * sizeof (value_type));
-		dealocate (begin_);
+		deallocate ();
 		end_ = new_storage + size ();
 		begin_ = new_storage;
 		end_of_storage_ = begin_ + size () + 1;
 	}
 	*end_ = value;
 	end_++;
+	*/
 }
 template <typename T>
 void MyVector <T>::push_back (T &&value)
 {
+	*end_ = insert (end_, value);
+	/*
 	if (end_ == end_of_storage_)
 	{
 		pointer new_storage = allocate (size () + 1);
 		memcpy (new_storage, begin_, size () * sizeof (value_type));
-		dealocate (begin_);
+		deallocate ();
 		end_ = new_storage + size ();
 		begin_ = new_storage;
 		end_of_storage_ = begin_ + size () + 1;
 	}
 	*end_ = std::move (value);
 	end_++;
+	*/
 }
 template <typename T>
 void MyVector <T>::pop_back () {end_--;}
@@ -258,7 +279,7 @@ void MyVector <T>::resize (typename MyVector <T>::size_type count)
 		typename MyVector <T>::size_type new_size = size () + count;
 		pointer new_storage = allocate (new_size);
 		memcpy (new_storage, begin_, size() * sizeof(value_type));
-		deallocate (begin_);
+		deallocate ();
 		begin_ = new_storage;
 		end_of_storage_ = begin_ + new_size;
 	}
@@ -272,7 +293,7 @@ void MyVector <T>::reserve (typename MyVector <T>::size_type new_cap)
 		const size_t cur_size = size ();
 		pointer new_storage = allocate (new_cap);
 		memcpy (new_storage, begin_, cur_size * sizeof (value_type));
-		deallocate (begin_);
+		deallocate ();
 		begin_ = new_storage;
 		end_ = new_storage + cur_size;
 		end_of_storage_ = begin_ + new_cap;
