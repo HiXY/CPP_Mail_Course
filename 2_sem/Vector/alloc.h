@@ -1,22 +1,16 @@
-#include <iostream>
+#include <limits>
+#include <stdlib.h>
 
-template <class T>
+template <typename T>
 class MyAlloc
 {
     public:
-        using T           value_type;
-        using T*          pointer;
-        using const T*    const_pointer;
-        using T&          reference;
-        using const T&    const_reference;
-        using std::size_t size_type;
-        ////using std::ptrdiff_t difference_type;
-
-        template <class U>              //// rebind allocator to type U
-        struct rebind
-        {
-            using MyAlloc <U> other;
-        }
+        typedef T           value_type;
+        typedef T*          pointer;
+        typedef const T*    const_pointer;
+        typedef T&          reference;
+        typedef const T&    const_reference;
+        typedef std::size_t size_type;
 
         MyAlloc () {}
         MyAlloc (const MyAlloc &) {}
@@ -24,50 +18,28 @@ class MyAlloc
         MyAlloc (const MyAlloc <U> &) {}
         ~MyAlloc (){}
 
-        pointer adress (reference value) const
+        template <typename U>                                                  //// rebind allocator to type U
+        struct rebind
+        {typedef MyAlloc <U> other;};
+
+        pointer allocate (size_type num)                                    //// alloc but don't init num el of type T
         {
-            return &value;
+            return static_cast <pointer> (calloc (num, sizeof (value_type)));
         }
-        const_pointer adress (const_reference value) const
-        {
-            return &value;
-        }
-        // return maximum number of elements that can be allocated
+        void deallocate (pointer ptr, size_type num) {free (ptr);}      //// deallocate storage p of deleted elements
+        void construct (pointer ptr, const T& value) {new (ptr) T (value);} //// init mem with placement new
+        void destroy (pointer ptr) { ptr -> ~T ();}
+        pointer adress (reference value) const {return &value;}
+        const_pointer adress (const_reference value) const {return &value;}
         size_type max_size () const
         {
-            return std::numeric_limits<std::size_t>::max () / sizeof (T);
+            return std::numeric_limits <size_type>::max () / sizeof (T);
         }
-        // allocate but don't initialize num elements of type T
-        pointer allocate (size_type num)
-        {
-            pointer ret = calloc (num, sizeof (value_type));
-            return ret;
-        }
-        void construct (pointer ptr, const T& value)
-        {
-            // initialize memory with placement new
-            new (ptr) T (value);
-        }
-        // destroy elements of initialized storage p
-        void destroy (pointer ptr)
-        {
-            // destroy objects by calling their destructor
-            p -> ~T ();
-        }
-        // deallocate storage p of deleted elements
-        void deallocate (pointer ptr, size_type num = 0)
-        {
-            std::free (ptr);
-        }
-        // return that all specializations of this allocator are interchangeable
+                                                                                    //// return that all spec of this alloc are interchangeable
         template <class T2>
         bool operator == (const MyAlloc<T2> &) const
-        {
-            return true;
-        }
+        {return true;}
         template <class T2>
         bool operator != (const MyAlloc<T2> &) const
-        {
-            return false;
-        }
+        {return false;}
 };
